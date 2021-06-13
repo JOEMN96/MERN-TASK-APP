@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "nodemon ./src/index.js"
+    "start": "nodemon --experimental-modules ./src/index.js"
   },
   "keywords": [],
   "author": "",
@@ -15,5 +15,8 @@
     "express": "^4.17.1",
     "mongoose": "^5.12.13",
     "validator": "^13.6.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
   }
 }

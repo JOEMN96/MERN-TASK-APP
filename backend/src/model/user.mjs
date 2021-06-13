@@ -1,5 +1,8 @@
-import { Schema, model } from "mongoose";
-import { isEmail } from "validator";
+import mongoose from "mongoose";
+import validator from "validator";
+
+const model = mongoose.model;
+const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
   userName: {
@@ -13,9 +16,9 @@ const UserSchema = new Schema({
     trim: true,
     validate: {
       validator: function (val) {
-        if (!isEmail(val)) return false;
+        if (!validator.isEmail(val)) return false;
       },
-      message: (val) => `${val} must be a valid Email`,
+      message: (val) => `${val.value} must be a valid Email`,
     },
   },
   password: {
@@ -24,9 +27,7 @@ const UserSchema = new Schema({
     trim: true,
     validate: {
       validator: function (value) {
-        if (value.length < 8) {
-          return false;
-        }
+        if (!value.length > 8) return false;
       },
       message: (value) => "Password Must be 8 char Long",
     },
