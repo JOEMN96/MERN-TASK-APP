@@ -1,5 +1,5 @@
 const createTask = (req, res) => {
-  console.log("pp");
+  const { description } = req.body;
 };
 
 export { createTask };
