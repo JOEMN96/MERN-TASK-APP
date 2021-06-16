@@ -1,17 +1,17 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose from "mongoose";
 
-const Schema = mongoose.Schema;
+let schema = mongoose.Schema;
 const model = mongoose.model;
 
-const Task = new Schema({
+const Task = new schema({
   completed: {
     type: Boolean,
     default: false,
-    trim: true,
   },
   description: {
     type: String,
     trim: true,
+    required: true,
   },
   version: {
     type: Number,
