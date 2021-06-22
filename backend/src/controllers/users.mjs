@@ -1,33 +1,55 @@
 import User from "../model/user.mjs";
 
-const getAllUsers = (req, res) => {
-  User.findOne({})
-    .then((users) => {
-      if (!users) {
-        res.status(404).send({ message: "No users Available" });
-      }
-      res.status(200).send(users);
-    })
-    .catch((err) => {
-      res.status(500).send(err);
-    });
+const getAllUsers = async (req, res) => {
+  try {
+    const _users = await User.find({});
+    if (!_users) {
+      return res.status(404).send({ message: "No users Available" });
+    }
+    res.status(200).send(_users);
+  } catch (e) {
+    res.status(500).send(e);
+  }
 };
 
 // ? Get A Single User
 
-const getSingleUsers = (req, res) => {
+const getSingleUsers = async (req, res) => {
   const id = req.params.id;
 
-  User.findById(id)
-    .then((user) => {
-      if (!user) {
-        res.status(404).json({ message: "USer not Found" });
-      }
-      res.status(200).send(user);
-    })
-    .catch((e) => {
-      res.status(500).send({ err: e });
-    });
+  try {
+    const _user = await User.findById(id);
+    if (!_user) {
+      return res.status(404).json({ message: "USer not Found" });
+    }
+    res.status(200).send(_user);
+  } catch (e) {
+    res.status(500).send({ err: e });
+  }
 };
 
-export { getAllUsers, getSingleUsers };
+const updateUser = async (req, res) => {
+  const id = req.params.id;
+
+  const allowedUpdates = ["userName", "email", "password"];
+  const updates = Object.keys(req.body);
+  const isAllowed = updates.every((item) => allowedUpdates.includes(item));
+
+  if (!isAllowed) {
+    return res.status(403).send({ msg: "Not Allowed Parmeter is found" });
+  }
+
+  try {
+    const _user = await User.findByIdAndUpdate(id, req.body, {
+      new: true,
+      runValidators: true,
+      useFindAndModify: true,
+    });
+    if (!_user) return res.status(404).send({ msg: "No user Found" });
+    res.send(_user);
+  } catch (error) {
+    res.status(400).send(error);
+  }
+};
+
+export { getAllUsers, getSingleUsers, updateUser };

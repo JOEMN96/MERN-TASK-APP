@@ -1,17 +1,17 @@
 import User from "../model/user.mjs";
 
 const signUp = async (req, res) => {
-  const {
-    email,
-    password,
-    usernName
-  } = req.body;
+  const { email, password, usernName } = req.body;
+
+  const regUser = await User.find({ email });
+
+  if (regUser) return res.status(409).send({ msg: "Email is already in Use" });
 
   try {
     const _user = new User({
       email,
       password,
-      usernName
+      usernName,
     });
     const user = await _user.save();
     console.log(isdone);
@@ -26,6 +26,4 @@ const signUp = async (req, res) => {
   }
 };
 
-export {
-  signUp
-};
+export { signUp };
