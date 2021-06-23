@@ -52,4 +52,14 @@ const updateUser = async (req, res) => {
   }
 };
 
-export { getAllUsers, getSingleUsers, updateUser };
+const deleteUser = async (req, res) => {
+  try {
+    const deletedUser = await User.findByIdAndDelete(req.params.id);
+    if (!deletedUser) return res.status(404).send({ msg: "user not Found" });
+    res.send(deletedUser);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+};
+
+export { getAllUsers, getSingleUsers, updateUser, deleteUser };

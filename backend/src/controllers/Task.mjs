@@ -44,4 +44,40 @@ const getSingleTasks = async (req, res) => {
   }
 };
 
-export { createTask, getAllTasks, getSingleTasks };
+const updateTask = async (req, res) => {
+  // ? Check to Perform What Task Thnings from Task is updated
+  const allowedUpdates = ["completed", "description", "version"];
+
+  const currentUpdates = Object.keys(req.body);
+
+  const isAllowed = currentUpdates.every((item) =>
+    allowedUpdates.includes(item)
+  );
+
+  if (!isAllowed)
+    return res.status(405).send({ msg: "Unable to update unknown Parameter" });
+
+  const id = req.params.id;
+  try {
+    const _task = await Task.findByIdAndUpdate(id, req.body, {
+      new: true,
+      runValidators: true,
+    });
+    if (!_task) return res.status(404).send({ msg: "Task not Found" });
+    res.send(_task);
+  } catch (e) {
+    res.status(404).send(e);
+  }
+};
+
+const deleteTask = async (req, res) => {
+  try {
+    const _task = await Task.findByIdAndDelete(req.params.id);
+    if (!_task) return res.status(404).send({ msg: "Task not FOund" });
+    res.send(_task);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+};
+
+export { createTask, getAllTasks, getSingleTasks, updateTask, deleteTask };

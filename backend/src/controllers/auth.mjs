@@ -3,8 +3,8 @@ import User from "../model/user.mjs";
 const signUp = async (req, res) => {
   const { email, password, usernName } = req.body;
 
-  const regUser = await User.find({ email });
-
+  const regUser = await User.findOne({ email });
+  console.log(regUser);
   if (regUser) return res.status(409).send({ msg: "Email is already in Use" });
 
   try {
@@ -13,9 +13,9 @@ const signUp = async (req, res) => {
       password,
       usernName,
     });
-    const user = await _user.save();
-    console.log(isdone);
-    res.status(201).send(user);
+    await _user.save();
+
+    res.send(_user);
     //todo:  Later Perform Redirect in frontend app using next SSR
   } catch (e) {
     const errors = [];
