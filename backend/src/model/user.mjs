@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import validator from "validator";
+import bcrypt from "bcrypt";
 
 const model = mongoose.model;
 const Schema = mongoose.Schema;
@@ -27,11 +28,22 @@ const UserSchema = new Schema({
     trim: true,
     validate: {
       validator: function (value) {
-        if (!value.length > 8) return false;
+        if (value.length < 8) {
+          return false;
+        }
       },
       message: (value) => "Password Must be 8 char Long",
     },
   },
+});
+
+UserSchema.pre("save", async function (next) {
+  const user = this;
+  if (user.isModified("password")) {
+    const hasedpw = await bcrypt.hash(user.password, 8);
+    user.password = hasedpw;
+  }
+  next();
 });
 
 export default model("user", UserSchema);

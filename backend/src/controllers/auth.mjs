@@ -1,17 +1,17 @@
 import User from "../model/user.mjs";
 
 const signUp = async (req, res) => {
-  const { email, password, usernName } = req.body;
+  const { email, password, userName } = req.body;
 
   const regUser = await User.findOne({ email });
-  console.log(regUser);
+
   if (regUser) return res.status(409).send({ msg: "Email is already in Use" });
 
   try {
     const _user = new User({
       email,
       password,
-      usernName,
+      userName,
     });
     await _user.save();
 

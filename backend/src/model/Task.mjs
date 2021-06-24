@@ -19,4 +19,9 @@ const Task = new schema({
   },
 });
 
+Task.pre("save", function (next) {
+  console.log(this);
+  next();
+});
+
 export default model("task", Task);

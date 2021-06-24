@@ -59,10 +59,14 @@ const updateTask = async (req, res) => {
 
   const id = req.params.id;
   try {
-    const _task = await Task.findByIdAndUpdate(id, req.body, {
-      new: true,
-      runValidators: true,
+    const _task = await Task.findById(id);
+
+    currentUpdates.forEach((update) => {
+      _task[update] = req.body[update];
     });
+
+    await _task.save();
+
     if (!_task) return res.status(404).send({ msg: "Task not Found" });
     res.send(_task);
   } catch (e) {
