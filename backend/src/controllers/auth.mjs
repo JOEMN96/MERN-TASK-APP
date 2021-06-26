@@ -16,7 +16,7 @@ const signUp = async (req, res) => {
     await _user.save();
     const token = await _user.generateJwt();
 
-    res.send({ _user, token });
+    res.status(201).send({ _user, token });
     //todo:  Later Perform Redirect in frontend app using next SSR
   } catch (e) {
     const errors = [];

@@ -1,15 +1,7 @@
 import User from "../model/user.mjs";
 
-const getAllUsers = async (req, res) => {
-  try {
-    const _users = await User.find({});
-    if (!_users) {
-      return res.status(404).send({ message: "No users Available" });
-    }
-    res.status(200).send(_users);
-  } catch (e) {
-    res.status(500).send(e);
-  }
+const getProfile = async (req, res) => {
+  res.send(req.user);
 };
 
 // ? Get A Single User
@@ -67,4 +59,4 @@ const deleteUser = async (req, res) => {
   }
 };
 
-export { getAllUsers, getSingleUsers, updateUser, deleteUser };
+export { getProfile, getSingleUsers, updateUser, deleteUser };
