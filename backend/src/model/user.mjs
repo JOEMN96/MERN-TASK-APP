@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import validator from "validator";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 const model = mongoose.model;
 const Schema = mongoose.Schema;
@@ -35,7 +36,36 @@ const UserSchema = new Schema({
       message: (value) => "Password Must be 8 char Long",
     },
   },
+  tokens: [
+    {
+      token: { type: String, required: true },
+    },
+  ],
 });
+
+UserSchema.statics.findByCred = async (email, password) => {
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    throw new Error("Unable to Find Email");
+  }
+
+  const isVerified = await bcrypt.compare(password, user.password);
+
+  if (!isVerified) {
+    throw new Error("Unable to Verify");
+  }
+  return user;
+};
+
+UserSchema.methods.generateJwt = async function () {
+  const token = jwt.sign({ _id: this.id.toString() }, "SUPERSECERTKEY", {
+    expiresIn: "7 days",
+  });
+  this.tokens.push({ token });
+  await this.save();
+  return token;
+};
 
 UserSchema.pre("save", async function (next) {
   const user = this;
@@ -46,4 +76,6 @@ UserSchema.pre("save", async function (next) {
   next();
 });
 
-export default model("user", UserSchema);
+const User = model("user", UserSchema);
+
+export default User;
