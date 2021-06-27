@@ -16,7 +16,7 @@ const signUp = async (req, res) => {
     await _user.save();
     const token = await _user.generateJwt();
 
-    res.status(201).send({ _user, token });
+    res.status(201).send({ user: _user, token });
     //todo:  Later Perform Redirect in frontend app using next SSR
   } catch (e) {
     const errors = [];
@@ -42,4 +42,26 @@ const signIn = async (req, res) => {
   }
 };
 
-export { signUp, signIn };
+const logOut = async (req, res) => {
+  try {
+    req.user.tokens = req.user.tokens.filter(
+      (token) => token.token !== req.token
+    );
+    await req.user.save();
+    res.send();
+  } catch (e) {
+    res.status(500);
+  }
+};
+
+const logOutAll = async (req, res) => {
+  try {
+    req.user.tokens = [];
+    await req.user.save();
+    res.send();
+  } catch (e) {
+    res.status(500);
+  }
+};
+
+export { signUp, signIn, logOut, logOutAll };

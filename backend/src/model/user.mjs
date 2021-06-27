@@ -43,6 +43,7 @@ const UserSchema = new Schema({
   ],
 });
 
+// ? On the Whole model
 UserSchema.statics.findByCred = async (email, password) => {
   const user = await User.findOne({ email });
 
@@ -58,6 +59,16 @@ UserSchema.statics.findByCred = async (email, password) => {
   return user;
 };
 
+UserSchema.statics.findEmailisTaken = async (email) => {
+  const user = await User.findOne({ email });
+  if (user) {
+    return { email: user.email, taken: true };
+  } else {
+    return { taken: false };
+  }
+};
+
+// ? On the instance of the model ie:user
 UserSchema.methods.generateJwt = async function () {
   const token = jwt.sign({ _id: this.id.toString() }, "SUPERSECERTKEY", {
     expiresIn: "7 days",
@@ -66,6 +77,16 @@ UserSchema.methods.generateJwt = async function () {
   await this.save();
   return token;
 };
+
+UserSchema.methods.toJSON = function () {
+  const user = this;
+  const userObj = user.toObject();
+  delete userObj.password;
+  delete userObj.tokens;
+  return userObj;
+};
+
+// ? Before saving into the db
 
 UserSchema.pre("save", async function (next) {
   const user = this;

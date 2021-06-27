@@ -35,3 +35,6 @@ app.use(
 
 app.use(userRouter);
 app.use(taskRouter);
+app.use((req, res) => {
+  res.status(404).send("Not Found");
+});

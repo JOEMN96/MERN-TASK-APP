@@ -6,12 +6,13 @@ const authMiddleWare = async (req, res, next) => {
     const token = req.header("Authorization").split(" ")[1];
     const decoded = jwt.verify(token, "SUPERSECERTKEY");
     const user = await User.findOne({
-      _id: decoded.id,
+      _id: decoded._id,
       "tokens.token": token,
     });
     if (!user) {
       throw new Error();
     }
+    req.token = token;
     req.user = user;
     next();
   } catch (error) {
