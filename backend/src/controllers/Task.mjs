@@ -9,7 +9,8 @@ const createTask = async (req, res) => {
 
   try {
     const _task = new Task({
-      description,
+      ...req.body,
+      owner: req.user._id,
     });
     await _task.save();
     res.status(201).json(_task);
@@ -20,14 +21,22 @@ const createTask = async (req, res) => {
 
 const getAllTasks = async (req, res) => {
   try {
-    const _tasks = await Task.find({});
-    if (!_tasks) {
-      return res.status(404).send({ message: "No Tasks available in DB" });
-    }
-    res.status(200).send(_tasks);
+    const task = await Task.findById("60da00910091b91d24431b41");
+    await task.populate("owner").execPopulate();
+    console.log(task);
+    res.status(200).send(task);
   } catch (e) {
-    res.status(500).send({ err: e });
+    res.send(404);
   }
+  // try {
+  //   const _tasks = await Task.find({});
+  //   if (!_tasks) {
+  //     return res.status(404).send({ message: "No Tasks available in DB" });
+  //   }
+  //   res.status(200).send(_tasks);
+  // } catch (e) {
+  //   res.status(500).send({ err: e });
+  // }
 };
 
 const getSingleTasks = async (req, res) => {

@@ -13,15 +13,11 @@ const Task = new schema({
     trim: true,
     required: true,
   },
-  version: {
-    type: Number,
-    default: 0,
+  owner: {
+    type: mongoose.Schema.Types.ObjectId,
+    require: true,
+    ref: "user",
   },
-});
-
-Task.pre("save", function (next) {
-  console.log(this);
-  next();
 });
 
 export default model("task", Task);

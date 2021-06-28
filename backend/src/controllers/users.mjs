@@ -16,7 +16,7 @@ const updateUser = async (req, res) => {
 
   if (updates.includes("email")) {
     const isAlreadyTaken = await User.findEmailisTaken(req.body.email);
-    console.log(isAlreadyTaken.email == req.body.email);
+
     if (isAlreadyTaken.taken) {
       return res.status(403).send({ msg: "Email is already in in use" });
     }
