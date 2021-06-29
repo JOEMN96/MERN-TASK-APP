@@ -30,11 +30,12 @@ const signUp = async (req, res) => {
 const signIn = async (req, res) => {
   try {
     const user = await User.findByCred(req.body.email, req.body.password);
-    const token = await user.generateJwt();
 
     if (!user) {
-      res.status(404).send(404);
+      res.status(404).send({ msg: "user Not Found" });
     }
+    const token = await user.generateJwt();
+
     res.send({ user, token });
   } catch (error) {
     console.log(error);

@@ -3,6 +3,8 @@ import validator from "validator";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
+import Task from "./Task.mjs";
+
 const model = mongoose.model;
 const Schema = mongoose.Schema;
 
@@ -43,12 +45,18 @@ const UserSchema = new Schema({
   ],
 });
 
+UserSchema.virtual("tasks", {
+  ref: "task",
+  localField: "_id",
+  foreignField: "owner",
+});
+
 // ? On the Whole model
 UserSchema.statics.findByCred = async (email, password) => {
   const user = await User.findOne({ email });
 
   if (!user) {
-    throw new Error("Unable to Find Email");
+    return false;
   }
 
   const isVerified = await bcrypt.compare(password, user.password);
@@ -94,6 +102,13 @@ UserSchema.pre("save", async function (next) {
     const hasedpw = await bcrypt.hash(user.password, 8);
     user.password = hasedpw;
   }
+  next();
+});
+
+// ? Delete a users tasks when he is deleting the account
+
+UserSchema.pre("remove", async function (next) {
+  await Task.deleteMany({ owner: this._id });
   next();
 });
 

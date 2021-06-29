@@ -21,29 +21,23 @@ const createTask = async (req, res) => {
 
 const getAllTasks = async (req, res) => {
   try {
-    const task = await Task.findById("60da00910091b91d24431b41");
-    await task.populate("owner").execPopulate();
-    console.log(task);
-    res.status(200).send(task);
+    const tasks = await req.user.populate("tasks").execPopulate();
+
+    // ? If u send user only u wont see tasks field cuz the tasks is a virtual field
+
+    res.status(200).send(req.user.tasks);
   } catch (e) {
-    res.send(404);
+    console.log(e);
+    res.status(500).send({ err: e });
   }
-  // try {
-  //   const _tasks = await Task.find({});
-  //   if (!_tasks) {
-  //     return res.status(404).send({ message: "No Tasks available in DB" });
-  //   }
-  //   res.status(200).send(_tasks);
-  // } catch (e) {
-  //   res.status(500).send({ err: e });
-  // }
 };
 
 const getSingleTasks = async (req, res) => {
   const id = req.params.id;
 
   try {
-    const task = await Task.findById(id);
+    console.log(req.user);
+    const task = await Task.findOne({ _id: id, owner: req.user._id });
     if (!task) {
       return res.status(404).send({ message: "task not Found" });
     }
@@ -68,15 +62,14 @@ const updateTask = async (req, res) => {
 
   const id = req.params.id;
   try {
-    const _task = await Task.findById(id);
-
+    const _task = await Task.findOne({ _id: id, owner: req.user._id });
+    if (!_task) return res.status(404).send({ msg: "Task not Found" });
     currentUpdates.forEach((update) => {
       _task[update] = req.body[update];
     });
 
     await _task.save();
 
-    if (!_task) return res.status(404).send({ msg: "Task not Found" });
     res.send(_task);
   } catch (e) {
     res.status(404).send(e);
@@ -85,7 +78,10 @@ const updateTask = async (req, res) => {
 
 const deleteTask = async (req, res) => {
   try {
-    const _task = await Task.findByIdAndDelete(req.params.id);
+    const _task = await Task.findOneAndDelete({
+      _id: req.params.id,
+      owner: req.user._id,
+    });
     if (!_task) return res.status(404).send({ msg: "Task not FOund" });
     res.send(_task);
   } catch (error) {
