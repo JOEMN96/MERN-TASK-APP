@@ -65,4 +65,8 @@ const logOutAll = async (req, res) => {
   }
 };
 
-export { signUp, signIn, logOut, logOutAll };
+const refreshTheToken = (req, res) => {
+  console.log("Refresh token route");
+};
+
+export { signUp, signIn, logOut, logOutAll, refreshTheToken };

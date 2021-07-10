@@ -1,0 +1,366 @@
+{
+	"info": {
+		"_postman_id": "21def994-06f1-48e1-97ec-17a1da354730",
+		"name": "Task",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "SignUp",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \"email\": \"Aruljoe38@gmail.com\", \"password\":\"22$#!!dada@\", \"userName\":\"JOE\" }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/signup",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"signup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Sign In",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"if(pm.response.code == 200) {\r",
+							"    pm.environment.set(\"authToken\", pm.response.json().token);\r",
+							"}\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MGQ4OTk1OWE4YzRkZTJlZjg5ZDU5ZGYiLCJpYXQiOjE2MjQ4MDc4MTcsImV4cCI6MTYyNTQxMjYxN30.B6HeqT1lhkpfDj06bFj9zPZ7QtKbAYC1YYGPL0h_Cbc",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \"email\": \"Aruljoe37@gmail.com\", \"password\":\"22$#!!dada@\" }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/signIn",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"signIn"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User Profile",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MGQ4OTk1OWE4YzRkZTJlZjg5ZDU5ZGYiLCJpYXQiOjE2MjQ4MDc5NzEsImV4cCI6MTYyNTQxMjc3MX0.8njq7aJ15ubmi63RGLaZ-a8hsn6JhJP7WuJR612oXaY",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "{{url}}/users/me",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"users",
+						"me"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get A single User",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/user/60c63678d9df9625a82c065b",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"user",
+						"60c63678d9df9625a82c065b"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update a USER ",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"email\": \"Aruljoe37@gmail.com\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/user/me",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"user",
+						"me"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete a USer",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/user/60d7147078d43910cc148362",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"user",
+						"60d7147078d43910cc148362"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create Task",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"description\":\"FOcus Joe2 37 Ac\",\r\n    \"completed\":false\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/createTask",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"createTask"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all Tasks",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/getAllTasks",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"getAllTasks"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Single Task",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/task/60db4b39780a3927640c330c",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"task",
+						"60db4b39780a3927640c330c"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update a TASK",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"completed\":false}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/task/60db3d48beab271c58c6bccd",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"task",
+						"60db3d48beab271c58c6bccd"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete a Task",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/task/60db3d48beab271c58c6bccd",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"task",
+						"60db3d48beab271c58c6bccd"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "LogOut",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/logOut",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"logOut"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "LogOutAll",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/logOutAll",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"logOutAll"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{authToken}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
